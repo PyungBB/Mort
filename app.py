@@ -484,6 +484,31 @@ def json_to_state(raw: str) -> AppState:
     )
 
 
+
+def clear_input_widget_keys():
+    """Clear Streamlit widget keys so loaded JSON values don't get overwritten by stale widget state."""
+    keys = list(st.session_state.keys())
+    prefixes = (
+        # affordability
+        "gross_salary_annual",
+        # scenario inputs
+        "price_", "dep_", "rate_pct_", "term_", "growth_pct_",
+        "fee_l_", "fee_g_", "op_m_",
+        # lump sum editors
+        "ls_m_", "ls_a_", "ls_r_", "ls_add_",
+        # scenario name/sdlt
+        "name_", "sdlt_",
+        # comparison selectors
+        "Left scenario", "Right scenario",
+    )
+    exact_keys = {"add_from"}  # add-scenario selector
+    for k in keys:
+        if k in exact_keys:
+            del st.session_state[k]
+            continue
+        if any(k.startswith(p) for p in prefixes):
+            del st.session_state[k]
+
 def ensure_default_session_state():
     if "affordability" not in st.session_state:
         st.session_state.affordability = AffordabilityConfig()
@@ -561,6 +586,9 @@ with st.expander("Profile: Save / Load (JSON)", expanded=False):
             st.success("Profile loaded. (Tip: collapse and continue.)")
 
 
+
+            clear_input_widget_keys()
+            st.rerun()
 # --- Sidebar: Global + Affordability ---
 with st.sidebar:
     st.header("Global")
