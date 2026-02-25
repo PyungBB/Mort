@@ -722,11 +722,13 @@ for idx, sc in enumerate(scenarios):
             interest_saved = max(baseline_interest - out["total_interest_gbp"], 0.0)
 
             st.subheader("Key metrics")
-            m1, m2, m3, m4 = st.columns(4)
+            # Show deposit explicitly (in £) instead of it being hidden inside "Upfront cash"
+            m1, m2, m3, m4, m5 = st.columns(5)
             m1.metric("Loan", fmt0(out["loan_gbp"]))
-            m2.metric("Monthly payment (scheduled)", fmt0(out["scheduled_payment_monthly_gbp"]))
-            m3.metric("SDLT", fmt0(sd["sdlt_total"]))
-            m4.metric("Upfront cash", fmt0(upfront_cash))
+            m2.metric("Deposit", fmt0(out["deposit_gbp"]))
+            m3.metric("Monthly payment (scheduled)", fmt0(out["scheduled_payment_monthly_gbp"]))
+            m4.metric("SDLT", fmt0(sd["sdlt_total"]))
+            m5.metric("Upfront cash", fmt0(upfront_cash))
 
             m5, m6, m7, m8 = st.columns(4)
             m5.metric("Payoff month", fmt0(out["payoff_month"]))
